@@ -19,18 +19,16 @@
     '';
   };
 
-  programs.zsh.enable = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  boot.kernelPackages = pkgs.linuxPackages_6_1;
+  services.fwupd.enable = true;
+
   networking.hostName = "patate"; # Define your hostname.
   networking.networkmanager.enable = true;
-
-  boot.kernelPackages = pkgs.linuxPackages_6_1;
-  # boot.kernelParams = [ "i915.force_probe=46a6" ];
-  services.fwupd.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Paris";
@@ -42,20 +40,36 @@
     keyMap = "us";
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  services = {
+    xserver = {
+      # Enable the X11 windowing system.
+      enable = true;
 
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.displayManager.defaultSession = "none+i3";
-  services.xserver.windowManager.i3.enable = true;
+      # Enable the Desktop Environment.
+      displayManager.lightdm.enable = true;
+      displayManager.defaultSession = "none+i3";
+      windowManager.i3.enable = true;
 
-  # Configure keymap in X11
-  services.xserver.layout = "us";
-  services.xserver.xkbOptions = "compose:caps";
+      # Enable touchpad support (enabled default in most desktopManager).
+      libinput.enable = true;
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
+      # Configure keymap in X11
+      layout = "us";
+      xkbOptions = "compose:caps";
+    };
+
+    # Enable CUPS to print documents.
+    printing.enable = true;
+
+    # Bluetooth
+    blueman.enable = true;
+
+    # Enable postgresql
+    postgresql.enable = true;
+
+    # Enable OpenSSH
+    openssh.enable = true;
+  };
 
   # Enable sound.
   sound.enable = true;
@@ -63,17 +77,8 @@
 
   # Enable bluetooth
   hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
 
-  # Enable postgresql
-  services.postgresql.enable = true;
-
-  # Enable SSH
-  services.openssh.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
-
+  # Enable VirtualBox
   virtualisation.virtualbox.host.enable = true;
 
   environment.variables = { 
@@ -132,6 +137,7 @@
 
   services.udev.packages = [ pkgs.yubikey-personalization ];
 
+  programs.zsh.enable = true;
   programs.gnupg.agent = {
     enable = true;
     pinentryFlavor = "curses";
