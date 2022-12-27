@@ -70,7 +70,7 @@ in
       enable = true;
       shellAliases = {
         home = "vim ~/Configuration/users/poustouflan/home.nix";
-        update = "~/Configuration/apply_users.sh";
+        update = "~/Configuration/apply-users.sh";
       };
       history = {
         size = 10000;
@@ -117,6 +117,7 @@ in
     picom = {
       enable = true;
       shadow = true;
+      vSync = true;
     };
 
     # GPG Configuration

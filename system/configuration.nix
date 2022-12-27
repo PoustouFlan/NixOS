@@ -40,6 +40,7 @@
     keyMap = "us";
   };
 
+
   services = {
     xserver = {
       # Enable the X11 windowing system.
@@ -69,6 +70,9 @@
 
     # Enable OpenSSH
     openssh.enable = true;
+
+    # Enable Fingerprint Reader
+    fprintd.enable = true;
   };
 
   # Enable sound.
