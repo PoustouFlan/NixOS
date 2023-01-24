@@ -20,17 +20,20 @@ in
     evince
 
     # Terminal
-    sl lolcat
+    sl lolcat gti
     thefuck oh-my-zsh zsh-powerlevel10k zplug
     tree
     tig
     ascii
+    xclip
+    xsel
+    man-pages
 
     # Tools
     pciutils
-    xclip
     flameshot
     direnv
+    xorg.xkill
 
     # Yubikey
     yubikey-manager-qt
@@ -71,6 +74,7 @@ in
       shellAliases = {
         home = "vim ~/Configuration/users/poustouflan/home.nix";
         update = "~/Configuration/apply-users.sh";
+        iorgen_activate = "source ~/CP/Prologin/iorgen/.venv/bin/activate";
       };
       history = {
         size = 10000;
