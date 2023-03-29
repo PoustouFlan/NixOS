@@ -21,7 +21,7 @@ in
 
     # Terminal
     sl lolcat gti
-    thefuck oh-my-zsh zsh-powerlevel10k zplug
+    oh-my-zsh zsh-powerlevel10k zplug
     tree
     tig
     ascii
@@ -34,15 +34,19 @@ in
     flameshot
     direnv
     xorg.xkill
+    libreoffice
+    pixelorama
 
     # Yubikey
     yubikey-manager-qt
 
     # Code
+    sage
     universal-ctags
     mono
     gdb
     git-crypt
+    python3Packages.ipython
   ];
 
   programs = {
@@ -65,6 +69,7 @@ in
         user.signingkey = "3C6859C058C43DCF";
         commit.gpgsign = true;
         commit.verbose = true;
+        init.defaultbranch = "main";
       };
     };
 
@@ -82,7 +87,7 @@ in
       };
       oh-my-zsh = {
         enable = true;
-        plugins = [ "git" "thefuck" ];
+        plugins = [ "git" ];
         theme = "robbyrussell";
       };
       zplug = {
