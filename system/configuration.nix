@@ -31,7 +31,7 @@
   networking.networkmanager.enable = true;
 
   # Set your time zone.
-  time.timeZone = "Europe/Paris";
+  time.timeZone = "Asia/Seoul";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -73,6 +73,26 @@
 
     # Enable Fingerprint Reader
     fprintd.enable = true;
+
+    pcscd.enable = true;
+    udev.packages = [ pkgs.yubikey-personalization ];
+
+    # Key mapping
+    actkbd = {
+      enable = true;
+      bindings = [
+        {
+          keys = [ 225 ];
+          events = [ "key" ];
+          command = "/run/current-system/sw/bin/light -A 10";
+        }
+        {
+          keys = [ 224 ];
+          events = [ "key" ];
+          command = "/run/current-system/sw/bin/light -U 10";
+        }
+      ];
+    };
   };
 
   # Enable sound.
@@ -114,7 +134,7 @@
     shell = pkgs.zsh;
     uid = 26204;
     initialPassword = "password";
-    extraGroups = [ "wheel" "networkmanager" "audio" "docker" ];
+    extraGroups = [ "wheel" "networkmanager" "audio" "docker" "video"];
 
     # Survival kit
     packages = with pkgs; [
@@ -139,16 +159,20 @@
     pinentry-curses
   ];
 
-  services.udev.packages = [ pkgs.yubikey-personalization ];
 
-  programs.zsh.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryFlavor = "curses";
-    enableSSHSupport = true;
+  programs = {
+    zsh.enable = true;
+
+    gnupg.agent = {
+      enable = true;
+      pinentryFlavor = "curses";
+      enableSSHSupport = true;
+    };
+
+    # Backlight
+    light.enable = true;
   };
 
-  services.pcscd.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
