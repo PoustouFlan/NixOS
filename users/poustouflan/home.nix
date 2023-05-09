@@ -35,7 +35,7 @@ in
     direnv
     xorg.xkill
     libreoffice
-    pixelorama
+    pixelorama gimp
 
     # Yubikey
     yubikey-manager-qt
@@ -47,6 +47,9 @@ in
     gdb
     git-crypt
     python3Packages.ipython
+
+    # Notifications
+    dunst
   ];
 
   programs = {
