@@ -21,6 +21,7 @@
       "${modifier}+Print" = "exec --no-startup-id ${pkgs.flameshot}/bin/flameshot full -c -p \"~/Pictures/Screenshots\"";
       "${modifier}+Shift+Print" = "exec --no-startup-id ${pkgs.flameshot}/bin/flameshot gui";
       "${modifier}+L" = "exec --no-startup-id i3lock -i ~/Pictures/Wallpapers/i3lock.png";
+      "${modifier}+Tab" = "workspace next";
     };
 
     modes = { 
@@ -41,7 +42,8 @@
     startup = [
       # Wallpaper
       {
-        command = "${pkgs.feh}/bin/feh --bg-scale ~/Pictures/Wallpapers/aperture.jpg";
+        #command = "${pkgs.feh}/bin/feh --bg-scale ~/Pictures/Wallpapers/aperture.jpg";
+        command = "${pkgs.feh}/bin/feh --bg-scale ~/Pictures/Wallpapers/aperture_pride.jpg";
         always = true;
         notification = false;
       }
