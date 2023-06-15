@@ -1,21 +1,19 @@
 { config, pkgs, specialArgs, lib, ... }:
 with pkgs;
 let
-  # Discord
-  discordUpdated = pkgs.discord.override rec {
-    version = "0.0.22";
-    src = builtins.fetchurl {
-      url = "https://dl.discordapp.net/apps/linux/${version}/discord-${version}.tar.gz";
-      sha256 = "19xbmrd782m4lp2l0ww5v3ip227g0z8pplxigxga96q43rvp6p0p";
-    };
-  };
+  osuUpdated = pkgs.osu-lazer.overrideAttrs (oldAttrs:
+    {
+      version = "2023.614.1";
+    }
+  );
 in
 {
   # User Packages
   home.packages = with pkgs; [
 
     # Browser
-    discordUpdated
+    discord-canary
+    slack
     chromium
     evince
 
@@ -50,6 +48,9 @@ in
 
     # Notifications
     dunst
+
+    # Jeux
+    osuUpdated
   ];
 
   programs = {
