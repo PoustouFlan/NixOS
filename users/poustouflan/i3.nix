@@ -42,8 +42,8 @@
     startup = [
       # Wallpaper
       {
-        #command = "${pkgs.feh}/bin/feh --bg-scale ~/Pictures/Wallpapers/aperture.jpg";
-        command = "${pkgs.feh}/bin/feh --bg-scale ~/Pictures/Wallpapers/aperture_pride.jpg";
+        command = "${pkgs.feh}/bin/feh --bg-scale ~/Pictures/Wallpapers/aperture.jpg";
+        #command = "${pkgs.feh}/bin/feh --bg-scale ~/Pictures/Wallpapers/aperture_pride.jpg";
         always = true;
         notification = false;
       }

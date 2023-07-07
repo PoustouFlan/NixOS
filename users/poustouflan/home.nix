@@ -3,7 +3,7 @@ with pkgs;
 let
   osuUpdated = pkgs.osu-lazer.overrideAttrs (oldAttrs:
     {
-      version = "2023.614.1";
+      version = "2023.617.0";
     }
   );
 in
@@ -34,6 +34,7 @@ in
     xorg.xkill
     libreoffice
     pixelorama gimp
+    arandr
 
     # Yubikey
     yubikey-manager-qt
@@ -45,12 +46,16 @@ in
     gdb
     git-crypt
     python3Packages.ipython
+    nixpkgs-fmt
 
     # Notifications
     dunst
 
     # Jeux
     osuUpdated
+
+
+    teams
   ];
 
   programs = {

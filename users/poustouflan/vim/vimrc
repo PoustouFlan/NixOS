@@ -1,26 +1,26 @@
-set autoread
-set lazyredraw
-set encoding=utf-8
-set backspace=eol,indent,start
-set scrolloff=4
-set splitright
-set splitbelow
-syntax enable
-set wildmenu
-set wildmode=longest:full,list:full
-syntax on
-set colorcolumn=80
-set showmatch
-set list
-set listchars=tab:>─,eol:¬,trail:\ ,nbsp:¤
-set fillchars=vert:│
-set cursorline
-set softtabstop=-1
-set smarttab
 set autoindent
+set autoread
+set backspace=eol,indent,start
+set cursorline
+set colorcolumn=80
+set encoding=utf-8
+set fillchars=vert:│
 set hlsearch
 set incsearch
+set lazyredraw
+set list
+set listchars=tab:>─,eol:¬,trail:\ ,nbsp:¤
+set scrolloff=4
+set showmatch
 set smartcase
+set smarttab
+set softtabstop=-1
+set splitbelow
+set splitright
+set wildmenu
+set wildmode=longest:full,list:full
+syntax enable
+syntax on
 autocmd Filetype make setlocal noexpandtab
 autocmd FileType vim setlocal foldmethod=marker
 let g:gutentags_cache_dir = expand('~/.cache/vim/ctags/')
