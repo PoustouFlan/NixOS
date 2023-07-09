@@ -58,6 +58,10 @@ in
     teams
   ];
 
+  home.file = {
+    ".vim/filetype.vim".source = vim/filetype.vim;
+  };
+
   programs = {
 
     # Let Home Manager install and manage itself.
