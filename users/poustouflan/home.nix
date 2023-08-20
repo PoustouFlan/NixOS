@@ -35,9 +35,13 @@ in
     libreoffice
     pixelorama gimp
     arandr
+    gparted
+    obs-studio
+    burpsuite
 
     # Yubikey
     yubikey-manager-qt
+    yubikey-personalization-gui
 
     # Code
     sage
@@ -54,12 +58,14 @@ in
     # Jeux
     osuUpdated
 
-
+    mtpaint
+    masterpdfeditor4
     teams
   ];
 
   home.file = {
     ".vim/filetype.vim".source = vim/filetype.vim;
+    ".vim/UltiSnips/".source = vim/UltiSnips;
   };
 
   programs = {
@@ -115,6 +121,11 @@ in
     # Vim Configuration
     vim = {
       enable = true;
+      plugins = with pkgs.vimPlugins; [
+        vim-airline
+        nerdtree
+        ultisnips
+      ];
       settings = {
         relativenumber = true;
         number = true;

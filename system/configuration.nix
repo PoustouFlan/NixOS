@@ -60,6 +60,11 @@
 
     # Enable CUPS to print documents.
     printing.enable = true;
+    printing.drivers = [ pkgs.gutenprint ];
+    avahi.enable = true;
+    avahi.nssmdns = true;
+    avahi.openFirewall = true;
+
 
     # Bluetooth
     blueman.enable = true;

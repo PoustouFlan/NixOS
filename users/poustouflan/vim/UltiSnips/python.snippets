@@ -1,0 +1,219 @@
+## Input Output
+
+snippet fastio "Fast I/O" b
+## Fast I/O
+import io,os,sys
+
+# Fast input. Use s = input().decode() for strings
+input = io.BytesIO(os.read(0,os.fstat(0).st_size)).readline
+
+# Fast output
+def print(*args, sep = ' ', end = '\n'):
+    string = sep.join(map(str, args))+end
+    sys.stdout.write(string)
+endsnippet
+
+snippet debug "Debug function" b
+def debug(*args, sep = ' ', end = '\n'):
+    string = "Debug: " + sep.join(map(str, args)) + end
+    sys.stderr.write(string)
+endsnippet
+
+snippet cf "codeforces template" b
+test_cases = int(input())
+for test_number in range(test_cases):
+endsnippet
+
+snippet ri "read one or multiple integer" b
+${1:n} = `!p snip.rv = "map(int, input().split())" if ', ' in t[1] else "int(input())"`
+endsnippet
+
+snippet ril "read integer list" b
+${1:array} = list(map(int, input().split()))
+endsnippet
+
+snippet rg "read graph in edges list representation" b
+${1:adj} = [[] for _ in range(${2:n})]
+for _ in range(${3:m}):
+    u, v = map(int, input().split())
+    $1[u-1].append(v-1)
+    $1[v-1].append(u-1) # delete if directed
+endsnippet
+
+
+
+## Traversals
+
+snippet for "for range" b
+for ${1:_} in range($2):
+endsnippet
+
+snippet dfs "depth first search" b
+def dfs(${1:vertex=0}):
+    # Preorder
+    $2
+    for neighbor in ${3:adj}[${1/(\w+).*/$1/}]:
+        dfs(neighbor)
+    # Postorder
+    $4
+endsnippet
+
+snippet bfs "breadth first search" b
+level = []
+while len(level) > 0:
+    next_level = []
+    # Level processing
+    $1
+    for vertex in level:
+        # Vertex processing
+        $2
+        for neighbor in ${3:adj}[vertex]:
+            next_level.append(neighbor)
+    level = next_level
+endsnippet
+
+
+
+## Data structures
+
+snippet dsu "disjoint set union" b
+${1:dsu} = [-1] * ${2:n}
+
+def find(vertex):
+    start = vertex
+    while $1[vertex] >= 0:
+        vertex = $1[vertex]
+
+    # Path compression
+    if $1[start] >= 0:
+        $1[start] = vertex
+
+def union(a, b):
+    repr_a = find(a)
+    repr_b = find(b)
+    if repr_a == repr_b:
+        return False
+
+    if $1[repr_a] > $1[repr_b]:
+        $1[repr_b] += $1[repr_a]
+        $1[repr_a] = repr_b
+    else:
+        $1[repr_a] += $1[repr_b]
+        $1[repr_b] = repr_a
+    return True
+endsnippet
+
+snippet pref "prefix sum array" b
+${1:prefix} = [0]
+for elt in ${2:array}:
+    $1.append(elt + $1[-1])
+# sum($2[a:b]) = $1[b]-$1[a]
+endsnippet
+
+snippet fenwick "Fenwick tree" b
+class Fenwick:
+    """
+    Implements a binary indexed tree.
+
+    array = Fenwick([1, 3, 4, 8, 6, 1, 4, 2])
+    array[2:4] # 12
+    array[2] = 5
+    array[2:4] # 13
+    """
+    def __init__(self, array):
+        self.length = len(array)
+        self.array = [0] * (self.length+1)
+        for i in range(self.length):
+            self[i] = array[i]
+
+    def __setitem__(self, key, value):
+        actual = self[key]
+        delta = value ${2:-} actual       # inverse operation
+
+        key += 1
+        while key <= self.length:
+            self.array[key] ${1:+}= delta # operation
+            key += key & (-key)
+
+    def __getitem__(self, key):
+        if type(key) == int:
+            start = key
+            stop = key+1
+        elif type(key) == slice:
+            start = 0 if key.start is None else key.start
+            stop = self.length if key.stop is None else key.stop
+        else:
+            raise TypeError("Expected slice or an integer")
+
+        if start == 0:
+            result = 0
+            while stop > 0:
+                result $1= self.array[stop]
+                stop -= stop & (-stop)
+            return result
+        else:
+            return self[:stop] $2 self[:start]
+endsnippet
+
+snippet segtree "Segment Tree" b
+class SegTree:
+    """
+    Implements a segment tree.
+
+    array = SegTree([1, 3, 4, 8, 6, 1, 4, 2])
+    array[2:4] # 12
+    array[2] = 5
+    array[2:4] # 13
+    """
+    def __init__(self, array):
+        self.length = len(array)
+        self.array = [0]*self.length + array
+        for i in range(self.length-1, 0, -1):
+            self.array[i] += self.array[2*i]
+            self.array[i] += self.array[2*i+1]
+
+    def __setitem__(self, key, value):
+        i = key + self.length
+        self.array[i] = value
+        i //= 2
+        while i >= 1:
+            self.array[i] = self.array[2*i]
+            self.array[i] += self.array[2*i+1]
+            i //= 2
+
+    def __getitem__(self, key):
+        if type(key) == int:
+            return self.array[key + self.length]
+        elif type(key) == slice:
+            start = self.length if key.start is None else key.start + self.length
+            stop = 2*self.length-1 if key.stop is None else self.length + key.stop-1
+        else:
+            raise TypeError("Expected slice or an integer")
+
+        result = 0;
+        while start <= stop:
+            if start % 2 == 1:
+                result += self.array[start]
+                start += 1
+            if stop % 2 == 0:
+                result += self.array[stop]
+                stop -= 1
+            start //= 2
+            stop //= 2
+        return result
+endsnippet
+
+
+## Algorithms
+
+snippet bins "binary search" b
+lower_bound = $1 # Included
+upper_bound = $2 # Exluded
+while upper_bound - lower_bound > 1:
+    guess = (lower_bound + upper_bound) // 2
+    if $3(guess):
+        lower_bound = guess
+    else:
+        upper_bound = guess
+    # Finds the last true instance of $3
+endsnippet

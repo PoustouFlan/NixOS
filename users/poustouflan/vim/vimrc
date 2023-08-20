@@ -24,3 +24,14 @@ syntax on
 autocmd Filetype make setlocal noexpandtab
 autocmd FileType vim setlocal foldmethod=marker
 let g:gutentags_cache_dir = expand('~/.cache/vim/ctags/')
+
+map <silent> <F6> :NERDTreeToggle<CR>
+map <C-c> :!xsel -b < %<CR>
+
+" UltiSnips
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
+
+" Compile and run
+autocmd filetype cpp nnoremap <F5> :w<bar>term ++shell g++ %:p -o %:p:r -g -fsanitize=address; %:p:r<CR>

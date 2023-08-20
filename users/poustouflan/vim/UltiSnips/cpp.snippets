@@ -1,0 +1,71 @@
+## Input Output
+
+snippet cf "codeforces template" b
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int test_cases; cin >> test_cases;
+    for (int test_number = 0; test_number < test_cases; test_number++) {
+        $1
+    }
+}
+endsnippet
+
+snippet ri "read one or multiple integers" b
+${2:int} ${1:n}; cin >> `!p snip.rv = t[1].replace(', ', ' >> ')`;
+endsnippet
+
+snippet ril "read integer list" b
+vector<${3:int}> ${1:array}(${2:n});
+for (int i = 0; i < $2; i++)
+    cin >> $1[i];
+endsnippet
+
+snippet rg "read graph in edges list representation" b
+vector<vector<int>> ${1:adj} (${2:n});
+for (int i = 0; i < ${3:m}; i++) {
+    int u, v; cin >> u >> v;
+    $1[u-1].push_back(v-1);
+    $1[v-1].push_back(u-1); // delete if directed
+}
+endsnippet
+
+snippet wl "write some elements on a line" b
+cout << $1 << endl;
+endsnippet
+
+
+
+## Traversals
+
+snippet for "for range" b
+for (int ${1:_} = 0; $1 < $2; $1++) {
+    $3
+}
+endsnippet
+
+
+
+## Algorithms
+
+snippet collatz "Collatz sequence" b
+int collatz(long long n) {
+    int length = 0;
+    for ( ; n > 1; length++) {
+        if (n % 2 == 0)
+            n = n/2;
+        else
+            n = 3*n + 1;
+    }
+    return length;
+}
+endsnippet
+
+
+
+## CONSTANTS
+
+snippet mod "constant modulo = 1000000007" b
+const long long MOD = 1000000007;
+endsnippet
