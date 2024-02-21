@@ -2,3 +2,7 @@
 export GPG_TTY=$(tty)
 export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
 gpg-connect-agent updatestartuptty /bye > /dev/null
+
+# Bruce Schneier fact
+fact=$(curl -s https://www.schneierfacts.com/rss/random | xmllint --xpath '//rss/channel/item[1]/description/text()' -)
+echo $fact

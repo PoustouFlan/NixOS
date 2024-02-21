@@ -17,21 +17,84 @@ set smarttab
 set softtabstop=-1
 set splitbelow
 set splitright
+set termguicolors
+
 set wildmenu
 set wildmode=longest:full,list:full
+
+autocmd FileType c,cpp set comments=sl:/**,mb:\ *,ex:\ */
+
 syntax enable
 syntax on
 autocmd Filetype make setlocal noexpandtab
 autocmd FileType vim setlocal foldmethod=marker
 let g:gutentags_cache_dir = expand('~/.cache/vim/ctags/')
 
-map <silent> <F6> :NERDTreeToggle<CR>
-map <C-c> :!xsel -b < %<CR>
+nnoremap <F6> :Vex<CR>
+nnoremap <C-c> :!xsel -b < %<CR>
+inoremap kj <esc>
 
 " UltiSnips
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 
+" Airline
+let g:airline#extensions#tabline#enabled=1
+
+" autocomplete list options
+set completeopt=longest,menuone,popuphidden
+set completepopup=highlight:Pmenu,border:off
+
+" autocomplete suggestions menu colors
+highlight Pmenu ctermfg=white
+highlight Pmenu ctermbg=black
+highlight PmenuSel ctermbg=lightblue
+
+" coc settings
+set signcolumn=yes " always show sign column, prevents shifting
+" use tab and enter
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" use K to show documentation in preview window
+nnoremap <silent> <C-k> :call ShowDocumentation()<CR>
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
 " Compile and run
+autocmd filetype python nnoremap <F5> :w<bar>!python % < input.txt<CR>
 autocmd filetype cpp nnoremap <F5> :w<bar>term ++shell g++ %:p -o %:p:r -g -fsanitize=address; %:p:r<CR>
+autocmd filetype lisp nnoremap <F5> :w<bar>term ++shell sbcl --script %<CR>
+autocmd filetype haskell nnoremap <F5> :w<bar>term ++shell ghc %:p -o %:p:r; %:p:r<CR>
+
+" For ASM files (68000)
+" autocmd FileType asm set syntax=asm68k
+" autocmd FileType asm map <F4> :!a68k % -o%:r.hex -s -n -rmal<CR>
+" autocmd FileType asm map <F5> :!d68k %:r.hex<CR>
+autocmd FileType asm setlocal noexpandtab ts=15 sw=15 sts=15
+autocmd FileType asm map <F5> :!make %:r; ./%:r<CR>
+autocmd FileType asm set nolist
+
+" Theme
+colorscheme darkblue
+hi Normal guibg=NONE ctermbg=NONE
+hi MatchParen cterm=NONE ctermbg=black ctermfg=white
+
+
+let g:load_doxygen_syntax=1
+let g:doxygen_enhanced_color=1

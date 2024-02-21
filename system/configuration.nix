@@ -8,7 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    <nixos-hardware/framework/12th-gen-intel>
+    <nixos-hardware/framework/13-inch/12th-gen-intel>
   ];
 
   # Flakes
@@ -29,6 +29,19 @@
 
   networking.hostName = "patate"; # Define your hostname.
   networking.networkmanager.enable = true;
+
+  # HTB
+  # networking.extraHosts =
+  #   ''
+  #     10.129.1.27  ignition.htb
+  #   '';
+  # networking.firewall.trustedInterfaces = [
+  #   "tun0"
+  # ];
+
+  networking.firewall.trustedInterfaces = [
+    "wlp166s0"
+  ];
 
   # Set your time zone.
   time.timeZone = "Europe/Paris";
@@ -108,6 +121,11 @@
 
   # Enable VirtualBox
   virtualisation.virtualbox.host.enable = true;
+  virtualisation.docker.enable = true;
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
+  };
 
   environment.variables = { 
     EDITOR = "vim";
@@ -115,8 +133,8 @@
   };
 
   fonts = {
-    enableDefaultFonts = true;
-    fonts = with pkgs; [
+    enableDefaultPackages = true;
+    packages = with pkgs; [
       (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "Hack" ]; })
     ];
 

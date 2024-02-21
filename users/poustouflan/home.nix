@@ -6,16 +6,26 @@ let
       version = "2023.617.0";
     }
   );
+  my-python-packages = p: with p; [
+    requests
+    pyyaml
+    numpy
+    pillow
+    matplotlib
+    sympy
+  ];
+  my-python = pkgs.python3.withPackages my-python-packages;
 in
 {
   # User Packages
   home.packages = with pkgs; [
 
-    # Browser
+    # Web
     discord-canary
     slack
     chromium
     evince
+    thunderbird
 
     # Terminal
     sl lolcat gti
@@ -26,6 +36,7 @@ in
     xclip
     xsel
     man-pages
+    bat
 
     # Tools
     pciutils
@@ -37,30 +48,55 @@ in
     arandr
     gparted
     obs-studio
+    libxml2
+    sshfs
+    ffmpeg
+    cmake
+    pre-commit
+    graphviz
+
+    # Secu
     burpsuite
+    ghidra-bin
 
     # Yubikey
     yubikey-manager-qt
     yubikey-personalization-gui
 
     # Code
-    sage
+    my-python
+    sageWithDoc
     universal-ctags
     mono
-    gdb
-    git-crypt
+    gdb clang-tools
     python3Packages.ipython
     nixpkgs-fmt
+    nodejs_20
+    sbcl # lisp
+    ghc
+    valgrind
+    autoconf autoconf-archive automake
 
     # Notifications
     dunst
 
-    # Jeux
+    # Games
     osuUpdated
+    taisei
+    tetrio-desktop
+    # (callPackage ./unnamed-sdvx-clone.nix { })
 
     mtpaint
     masterpdfeditor4
-    teams
+    # teams
+
+    krb5 sshfs
+    pdfpc
+    jetbrains.rider
+    dotnet-sdk_7
+    # dotnet-runtime_7
+
+    lsp-plugins pulseeffects-legacy
   ];
 
   home.file = {
@@ -125,6 +161,10 @@ in
         vim-airline
         nerdtree
         ultisnips
+        coc-nvim
+        coc-pyright
+        coc-clangd
+        DoxygenToolkit-vim
       ];
       settings = {
         relativenumber = true;
@@ -141,6 +181,13 @@ in
     rofi = {
       enable = true;
       theme = "~/.config/nixpkgs/rofi/lb.rasi";
+    };
+
+    alacritty = {
+      enable = true;
+      settings = {
+        window.opacity = 0.9;
+      };
     };
   };
 

@@ -14,9 +14,9 @@ def print(*args, sep = ' ', end = '\n'):
 endsnippet
 
 snippet debug "Debug function" b
-def debug(*args, sep = ' ', end = '\n'):
-    string = "Debug: " + sep.join(map(str, args)) + end
-    sys.stderr.write(string)
+from sys import stderr
+def debug(*args, **kwargs):
+    print(*args, **kwargs, file=stderr)
 endsnippet
 
 snippet cf "codeforces template" b
@@ -40,6 +40,14 @@ for _ in range(${3:m}):
     $1[v-1].append(u-1) # delete if directed
 endsnippet
 
+snippet ra "read all input" b
+done = False
+while not done:
+    try:
+        ${1:line = input()}
+    except EOFError:
+        done = True
+endsnippet
 
 
 ## Traversals
@@ -203,6 +211,237 @@ class SegTree:
         return result
 endsnippet
 
+snippet rbtree "Red Black Tree" b
+class RBNode:
+    def __init__(self, color, key, left, right, p):
+        self.color = color
+        self.key = key
+        self.left = left
+        self.right = right
+        self.p = p
+
+    def minimum(self):
+        x = self
+        while x.left.key is not None:
+            x = x.left
+        return x
+
+    def __iter__(self):
+        if self.left.key is not None:
+            yield from self.left
+        yield self.key
+        if self.right.key is not None:
+            yield from self.right
+
+
+class RBTree:
+    RED = True
+    BLACK = False
+
+    def __init__(self):
+        self.nil = RBNode(self.BLACK, None, None, None, None)
+        self.root = self.nil
+
+    def left_rotate(self, x):
+        assert x.right != self.nil
+        y = x.right
+        x.right = y.left
+        if y.left != self.nil:
+            y.left.p = x
+
+        y.p = x.p
+        if x.p == self.nil:
+            self.root = y
+        elif x == x.p.left:
+            x.p.left = y
+        else:
+            x.p.right = y
+
+        y.left = x
+        x.p = y
+
+    def right_rotate(self, x):
+        assert x.left != self.nil
+        y = x.left
+        x.left = y.right
+        if y.right != self.nil:
+            y.right.p = x
+
+        y.p = x.p
+        if x.p == self.nil:
+            self.root = y
+        elif x == x.p.right:
+            x.p.right = y
+        else:
+            x.p.left = y
+
+        y.right = x
+        x.p = y
+
+    def insert(self, elt):
+        self._insert(RBNode(self.BLACK, elt, None, None, None))
+
+    def _insert(self, z):
+        y = self.nil
+        x = self.root
+        while x != self.nil:
+            y = x
+            if z.key < x.key:
+                x = x.left
+            else:
+                x = x.right
+
+        z.p = y
+        if y == self.nil:
+            self.root = z
+        elif z.key < y.key:
+            y.left = z
+        else:
+            y.right = z
+
+        z.left = self.nil
+        z.right = self.nil
+        z.color = self.RED
+        self.insert_fixup(z)
+
+    def insert_fixup(self, z):
+        while z.p.color == self.RED:
+            if z.p == z.p.p.left:
+                y = z.p.p.right
+                if y.color == self.RED:
+                    z.p.color = self.BLACK
+                    y.color = self.BLACK
+                    z.p.p.color = self.RED
+                    z = z.p.p
+                else:
+                    if z == z.p.right:
+                        z = z.p
+                        self.left_rotate(z)
+                    z.p.color = self.BLACK
+                    z.p.p.color = self.RED
+                    self.right_rotate(z.p.p)
+            else:
+                y = z.p.p.left
+                if y.color == self.RED:
+                    z.p.color = self.BLACK
+                    y.color = self.BLACK
+                    z.p.p.color = self.RED
+                    z = z.p.p
+                else:
+                    if z == z.p.left:
+                        z = z.p
+                        self.right_rotate(z)
+                    z.p.color = self.BLACK
+                    z.p.p.color = self.RED
+                    self.left_rotate(z.p.p)
+        self.root.color = self.BLACK
+
+    def transplant(self, u, v):
+        if u.p == self.nil:
+            self.root = v
+        elif u == u.p.left:
+            u.p.left = v
+        else:
+            u.p.right = v
+
+        v.p = u.p
+
+    def search(self, key):
+        x = self.root
+        while x != self.nil and x.key != key:
+            y = x
+            if key < x.key:
+                x = x.left
+            else:
+                x = x.right
+        if x == self.nil:
+            return None
+        return x
+
+    def delete(self, key):
+        z = self.search(key)
+        if z is None:
+            return False
+
+        self._delete(z)
+        return True
+
+    def _delete(self, z):
+        y = z
+        y_original_color = y.color
+        if z.left == self.nil:
+            x = z.right
+            self.transplant(z, z.right)
+        elif z.right == self.nil:
+            x = z.left
+            self.transplant(z, z.left)
+        else:
+            y = z.right.minimum()
+            y_original_color = y.color
+            x = y.right
+            if y.p == z:
+                x.p = y
+            else:
+                self.transplant(y, y.right)
+                y.right = z.right
+                y.right.p = y
+            self.transplant(z, y)
+            y.left = z.left
+            y.left.p = y
+            y.color = z.color
+
+        if y_original_color == self.BLACK:
+            self.delete_fixup(x)
+
+    def delete_fixup(self, x):
+        while x != self.root and x.color == self.BLACK:
+            if x == x.p.left:
+                w = x.p.right
+                if w.color == self.RED:
+                    w.color = self.BLACK
+                    x.p.color = self.RED
+                    self.left_rotate(x.p)
+                    w = x.p.right
+                if w.left.color == self.BLACK and w.right.color == self.BLACK:
+                    w.color = self.RED
+                    x = x.p
+                else:
+                    if w.right.color == self.BLACK:
+                        w.left.color = self.BLACK
+                        w.color = self.RED
+                        self.right_rotate(w)
+                        w = x.p.right
+                    w.color = x.p.color
+                    x.p.color = self.BLACK
+                    w.right.color = self.BLACK
+                    self.left_rotate(x.p)
+                    x = self.root
+            else:
+                w = x.p.left
+                if w.color == self.RED:
+                    w.color = self.BLACK
+                    x.p.color = self.RED
+                    self.right_rotate(x.p)
+                    w = x.p.left
+                if w.right.color == self.BLACK and w.left.color == self.BLACK:
+                    w.color = self.RED
+                    x = x.p
+                else:
+                    if w.left.color == self.BLACK:
+                        w.right.color = self.BLACK
+                        w.color = self.RED
+                        self.left_rotate(w)
+                        w = x.p.left
+                    w.color = x.p.color
+                    x.p.color = self.BLACK
+                    w.left.color = self.BLACK
+                    self.right_rotate(x.p)
+                    x = self.root
+        x.color = self.BLACK
+
+    def __iter__(self):
+        yield from self.root
+endsnippet
 
 ## Algorithms
 
